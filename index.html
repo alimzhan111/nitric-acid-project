@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ostwald Process</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f4f6f9;
+    color: #1e2530;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  header {
+    background: #1e3a5f;
+    color: #fff;
+    padding: 48px 24px 40px;
+    text-align: center;
+  }
+  header .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    color: #a8c8e8;
+  }
+  header h1 {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  header h1 span { color: #5bb3e8; }
+  header p { color: #a8bdd0; max-width: 520px; margin: 0 auto; font-size: 14px; }
+
+  nav {
+    background: #fff;
+    border-bottom: 1px solid #dde3ec;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .nav-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    display: flex;
+    overflow-x: auto;
+    padding: 0 16px;
+  }
+  nav a {
+    color: #5a6a7e;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 14px 16px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color .2s, border-color .2s;
+  }
+  nav a:hover { color: #1e3a5f; border-bottom-color: #1e3a5f; }
+
+  main { max-width: 880px; margin: 0 auto; padding: 0 20px 60px; }
+  section { padding-top: 52px; }
+
+  h2 { font-size: 1.45rem; font-weight: 700; color: #1e3a5f; margin-bottom: 6px; }
+  .section-line { width: 40px; height: 3px; background: #5bb3e8; border-radius: 2px; margin-bottom: 20px; }
+  h3 { font-size: 1rem; font-weight: 600; color: #1e3a5f; margin: 28px 0 8px; }
+  p { color: #3a4556; margin-bottom: 14px; }
+
+  hr.divider { border: none; border-top: 1px solid #dde3ec; margin-top: 52px; }
+
+  /* APA citation style */
+  cite.apa { font-style: normal; color: #2e7bb0; font-size: 13px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  .info-box { background: #fff; border: 1px solid #dde3ec; border-radius: 8px; padding: 22px; }
+  .info-box h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #2e7bb0; font-weight: 600; margin-bottom: 8px; }
+  .info-box p { font-size: 14px; margin: 0; }
+  .info-box.dark { background: #1e3a5f; border-color: #1e3a5f; }
+  .info-box.dark h4 { color: #7ec8e8; }
+  .info-box.dark p { color: #b8cfe0; }
+
+  .quote {
+    border-left: 3px solid #5bb3e8;
+    padding: 14px 20px;
+    background: #fff;
+    border-radius: 0 6px 6px 0;
+    margin: 20px 0;
+    font-style: italic;
+    font-size: 14px;
+    color: #3a4556;
+  }
+  .quote cite-block { display: block; margin-top: 8px; font-style: normal; font-size: 12px; color: #8a9ab0; }
+
+  .stages { display: flex; flex-direction: column; gap: 14px; margin: 20px 0; }
+  .stage { background: #fff; border: 1px solid #dde3ec; border-radius: 8px; overflow: hidden; display: grid; grid-template-columns: 54px 1fr; }
+  .stage-num { background: #1e3a5f; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 700; }
+  .stage-body { padding: 18px 22px; }
+  .stage-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #8a9ab0; font-weight: 600; margin-bottom: 8px; }
+  .eq { font-family: 'Courier New', monospace; font-size: 13px; background: #f4f6f9; border: 1px solid #dde3ec; border-radius: 5px; padding: 10px 14px; color: #1e2530; margin: 8px 0; }
+  .eq-meta { font-size: 12px; color: #8a9ab0; margin-top: 6px; }
+  .stage-body p { font-size: 14px; margin-top: 8px; margin-bottom: 0; }
+
+  .overall { background: #1e3a5f; color: #5bb3e8; font-family: 'Courier New', monospace; font-size: 14px; padding: 18px 22px; border-radius: 8px; text-align: center; margin: 20px 0; }
+  .overall .ol-label { display: block; font-family: 'Inter', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #7a9ec0; margin-bottom: 8px; }
+
+  .cond-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
+  .cond-card { background: #fff; border: 1px solid #dde3ec; border-radius: 8px; padding: 20px; }
+  .cond-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #8a9ab0; font-weight: 600; margin-bottom: 6px; }
+  .cond-val { font-size: 1.15rem; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
+  .cond-desc { font-size: 13px; color: #5a6a7e; line-height: 1.55; }
+
+  .flow { display: flex; align-items: center; gap: 6px; margin: 20px 0; flex-wrap: wrap; }
+  .flow-step { flex: 1; min-width: 110px; background: #fff; border: 1px solid #dde3ec; border-radius: 8px; padding: 14px 10px; text-align: center; font-size: 12px; line-height: 1.5; }
+  .flow-step strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #2e7bb0; margin-bottom: 5px; }
+  .flow-step.end { background: #1e3a5f; color: #fff; border-color: #1e3a5f; }
+  .flow-step.end strong { color: #5bb3e8; }
+  .flow-arr { color: #8a9ab0; font-size: 18px; flex-shrink: 0; }
+  .fig-caption { font-size: 12px; color: #8a9ab0; font-style: italic; margin-top: 6px; }
+
+  .impl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  .impl-card { background: #fff; border: 1px solid #dde3ec; border-radius: 8px; overflow: hidden; }
+  .impl-head { padding: 13px 18px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #fff; }
+  .impl-head.eco { background: #1e3a5f; }
+  .impl-head.env { background: #1e6b5e; }
+  .impl-item { padding: 14px 18px; border-bottom: 1px solid #edf0f4; display: flex; gap: 12px; align-items: flex-start; font-size: 13.5px; }
+  .impl-item:last-child { border-bottom: none; }
+  .impl-item p { margin: 0; color: #3a4556; }
+  .badge { flex-shrink: 0; font-size: 10px; font-weight: 600; letter-spacing: 1px; padding: 3px 7px; border-radius: 4px; margin-top: 2px; }
+  .adv { background: #d4edda; color: #1a5c35; }
+  .dis { background: #fde8e8; color: #7b1a1a; }
+
+  .future-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
+  .future-card { background: #fff; border: 1px solid #dde3ec; border-top: 3px solid #2e7bb0; border-radius: 8px; padding: 20px; }
+  .future-card h4 { font-size: 13px; font-weight: 600; color: #1e3a5f; margin-bottom: 8px; }
+  .future-card p { font-size: 13px; color: #5a6a7e; }
+
+  .bib { list-style: none; margin: 16px 0; }
+  .bib li { display: grid; grid-template-columns: 16px 1fr; gap: 12px; padding: 13px 0; border-bottom: 1px solid #edf0f4; font-size: 13.5px; color: #5a6a7e; }
+  .bib li:last-child { border-bottom: none; }
+  .bib li::before { content: ""; }
+  .bib li em { color: #1e2530; }
+
+  footer { text-align: center; background: #1e2530; color: #5a6a7e; font-size: 12px; padding: 24px; margin-top: 60px; }
+
+  @media (max-width: 620px) {
+    .two-col, .impl-grid { grid-template-columns: 1fr; }
+    .cond-grid { grid-template-columns: 1fr 1fr; }
+    .future-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="tag">Grade 10 Chemistry &middot; Criterion D</div>
+  <h1>The <span>Ostwald Process</span></h1>
+  <p>Industrial production of nitric acid and its role in solving global food security</p>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#intro">Introduction</a>
+    <a href="#chemistry">Chemistry</a>
+    <a href="#conditions">Conditions</a>
+    <a href="#flow">Process Flow</a>
+    <a href="#implications">Implications</a>
+    <a href="#future">Future</a>
+    <a href="#bibliography">Sources</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- INTRODUCTION -->
+  <section id="intro">
+    <h2>Introduction</h2>
+    <div class="section-line"></div>
+
+    <p>
+      The most widely used industrial process of producing nitric acid (HNO&#8323;) is the <strong>Ostwald Process</strong> and is in commercial use over a century. In 1902, <strong>Wilhelm Ostwald</strong> (1853&ndash;1932), a German-Baltic chemist, devised and patented it, and received the Nobel Prize in Chemistry in 1909, in part due to his success <cite class="apa">(Johnson, 2021)</cite>. Until the discovery of the Ostwald Process, the natural deposits of sodium nitrates could be used to only produce a limited amount of nitric acid, as only the natural deposits were available, and they were located in geographically concentrated regions in Chile. This was entirely transformed by the Ostwald Process which enabled large-scale continuous manufacture of nitric acid using raw materials that were readily available.
+    </p>
+
+    <p>
+      Nitric acid in itself is a corrosive strong acid that is colourless with the chemical formula HNO&#8323;. Its greatest use is as a precursor in the production of ammonium nitrate (NH&#8324;NO&#8323;) which is the main constituent of nitrogen fertilisers in agriculture worldwide. The modern production of fertilizers could not happen on the same scale to support the current food systems worldwide without a constant and inexpensive supply of nitric acid <cite class="apa">(Fertilizer Institute, 2023)</cite>. Nitric acid is also applied in the manufacture of nylon (through adipic acid), dyes, pharmaceuticals as well as explosives in the mining industry.
+    </p>
+
+    <div class="two-col">
+      <div class="info-box dark">
+        <h4>The Global Problem</h4>
+        <p>The United Nations estimates that the world population will settle to be over 9.7 billion by 2050. In the absence of synthetic nitrogen fertilisers, the existing agricultural land cannot raise as much food to arrest the hunger at such large-scale levels. None of the challenges are met more directly than the Ostwald Process.</p>
+      </div>
+      <div class="info-box">
+        <h4>Why Nitrogen Matters</h4>
+        <p>Nitrogen is a vital component of both proteins and amino acids and DNA. Plants do not take up atmospheric nitrogen (N&#8322;) directly, but require it in a fixed, soluble form, either as nitrate (NO&#8323;&sup1;&macr;) or as ammonium (NH&#8324;&sup1;&#8314;). Industrial chemistry has allowed approximately <strong>half of the nitrogen atoms</strong> present in the human body today to be of synthetic origin <cite class="apa">(Johnson, 2021)</cite>.</p>
+      </div>
+    </div>
+
+    <div class="quote">
+      "Without the Ostwald Process and the nitrogen fertilisers which it facilitates, some half the global population could not be nourished by the agricultural systems that exist nowadays."
+      <cite-block>&mdash; Johnson, P. (2021). <em>Industrial Inorganic Chemistry: The Ostwald Process.</em> Academic Press.</cite-block>
+    </div>
+
+    <p>
+      The Ostwald Process can thus be considered one of the most important applications of chemistry to the global problem in the history of the world. It also has a direct solution to the problem of food security through the affordable mass production of nitrogen compounds, which sustain the agricultural productivity of billions of people.
+    </p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- CHEMISTRY -->
+  <section id="chemistry">
+    <h2>The Chemistry</h2>
+    <div class="section-line"></div>
+
+    <p>
+      Nitric acid (HNO&#8323;) is obtained by the Ostwald Process after undergoing three separate chemical reactions on ammonia (NH&#8323;). The reaction associated with each stage is different, the reaction occurs under different conditions and the end product of the stage serves as the feed to the next stage. A combination of all three phases is an ongoing industrial process <cite class="apa">(Brown, 2020)</cite>.
+    </p>
+
+    <div class="stages">
+
+      <div class="stage">
+        <div class="stage-num">1</div>
+        <div class="stage-body">
+          <div class="stage-label">Oxidation of Ammonia with Catalysts</div>
+          <div class="eq">4 NH&#8323;(g) &nbsp;+&nbsp; 5 O&#8322;(g) &nbsp;&rarr;&nbsp; 4 NO(g) &nbsp;+&nbsp; 6 H&#8322;O(g)</div>
+          <div class="eq-meta">&Delta;H = &minus;906 kJ/mol &nbsp;&middot;&nbsp; Pt-Rh catalyst &nbsp;&middot;&nbsp; 800&ndash;900&deg;C &nbsp;&middot;&nbsp; 4&ndash;10 bar</div>
+          <p>
+            It is the most vital phase of the whole process. A stream of ammonia gas and air is introduced over a gauze of finely woven platinum-rhodium catalyst at very high temperatures. The oxygen of the air reacts with the ammonia, forming nitric oxide (NO) gas and water vapour which is the by-product. It is a strongly exothermic reaction, which gives off about 906 kJ of ammonia reacted each mole. This heat is reused by means of heat exchangers to pre-heat the incoming gas feed which is very beneficial to enhance the overall power performance of the plant. In ideal industrial circumstances, the conversion rate of Stage 1 is about 96% <cite class="apa">(Johnson, 2021)</cite>.
+          </p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-num">2</div>
+        <div class="stage-body">
+          <div class="stage-label">Oxidation of Nitric Oxide</div>
+          <div class="eq">2 NO(g) &nbsp;+&nbsp; O&#8322;(g) &nbsp;&rarr;&nbsp; 2 NO&#8322;(g)</div>
+          <div class="eq-meta">&Delta;H = &minus;114 kJ/mol &nbsp;&middot;&nbsp; ~50&deg;C &nbsp;&middot;&nbsp; No catalyst needed</div>
+          <p>
+            The hot gas stream leaving Stage 1 is cooled suddenly to a temperature of circa 50&deg;C with cooling systems before passing to Stage 2 oxidation chamber. At this lower temperature, the nitric oxide combines with the surplus oxygen in the air feed to form nitrogen dioxide (NO&#8322;), a reddish-brown, poisonous gas. This reaction can run without the need of a catalyst and is spontaneous under the conditions. Reduced temperature is desirable in this case because, based on the principle of Le Chatelier, the exothermic reaction should occur at low temperatures in order to shift the equilibrium to the product side and yield more NO&#8322; <cite class="apa">(Brown, 2020)</cite>.
+          </p>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-num">3</div>
+        <div class="stage-body">
+          <div class="stage-label">Absorption in Water</div>
+          <div class="eq">3 NO&#8322;(g) &nbsp;+&nbsp; H&#8322;O(l) &nbsp;&rarr;&nbsp; 2 HNO&#8323;(aq) &nbsp;+&nbsp; NO(g)</div>
+          <div class="eq-meta">&Delta;H = &minus;117 kJ/mol &nbsp;&middot;&nbsp; Absorption tower, counter-current flow of water</div>
+          <p>
+            At the last stage, the nitrogen dioxide gas passes through a tall absorption tower fed on the bottom and flows upwards against a downward stream of water. The counter-current configuration ensures the most contact between the gas and liquid phase thus propelling the reaction to the point of near-completion. The NO gas is not wasted as a by-product of this stage &mdash; this gas is recycled back into Stage 2 and is re-oxidised to form NO&#8322;. This does not only render the process economically efficient, but also ensures that nearly all the original ammonia is ultimately made into nitric acid, thereby reducing the waste produced <cite class="apa">(Smith &amp; Valles, 2019)</cite>. The ultimate product is an aqueous solution of nitric acid normally concentrated to 55&ndash;68% by mass.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="overall">
+      <span class="ol-label">Overall Equation</span>
+      NH&#8323;(g) &nbsp;+&nbsp; 2 O&#8322;(g) &nbsp;&rarr;&nbsp; HNO&#8323;(aq) &nbsp;+&nbsp; H&#8322;O(l)
+    </div>
+
+    <p>
+      The net transformation as expressed in the overall equation above can be summarised as follows: one mole of ammonia and two moles of oxygen eventually produce one mole of nitric acid and one mole of water. The intermediate products, NO and NO&#8322;, are not depicted since they are recycled and used again as part of the process itself <cite class="apa">(Brown, 2020)</cite>.
+    </p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- CONDITIONS -->
+  <section id="conditions">
+    <h2>Reaction Conditions</h2>
+    <div class="section-line"></div>
+
+    <p>
+      The working conditions that are employed in the Ostwald Process, especially in Stage 1, are an outcome of thorough engineering and scientific optimisation. Both conditions are a trade-off between economic practice on the one hand and chemical principle on the other. Making simple decisions that maximise yield on paper would tend to be either too slow or too expensive to use in industry, and therefore the conditions that are actually implemented are always a tradeoff between these competing aspects <cite class="apa">(Smith &amp; Valles, 2019)</cite>.
+    </p>
+
+    <div class="cond-grid">
+      <div class="cond-card">
+        <div class="cond-title">Catalyst</div>
+        <div class="cond-val">Pt&ndash;Rh Gauze</div>
+        <p class="cond-desc">
+          A well-woven gauze, made of 90 per cent platinum and 10 per cent rhodium. Platinum decreases the activation energy of the oxidation reaction and enables the reaction to be conducted at a rate also commercially useful. Rhodium is incorporated because it greatly enhances the mechanical strength and thermal stability of the gauze, otherwise it will lose strength rapidly at 800&ndash;900&deg;C. The fibre structure of the gauze offers very high surface area where the gaseous molecules can contact the solid catalyst <cite class="apa">(Johnson, 2021)</cite>.
+        </p>
+      </div>
+      <div class="cond-card">
+        <div class="cond-title">Temperature</div>
+        <div class="cond-val">800&ndash;900&deg;C</div>
+        <p class="cond-desc">
+          This range is a calculated trade-off. An increase in temperature accelerates the reaction but moves the equilibrium towards the reactant side (the forward reaction is exothermic, and therefore the principle of Le Chatelier predicts that high temperature lowers the yield). Reduction in temperatures would enhance the equilibrium yield but would render the reaction too slow. In Stage 1, a 96% conversion rate is attained at 800&ndash;900&deg;C and is regarded as the most economical <cite class="apa">(Brown, 2020)</cite>.
+        </p>
+      </div>
+      <div class="cond-card">
+        <div class="cond-title">Pressure</div>
+        <div class="cond-val">4&ndash;10 bar</div>
+        <p class="cond-desc">
+          In Stage 1, the amount of gas developed is more than the one consumed (9 moles &rarr; 10 moles), therefore high pressure should theoretically lower yield based on Le Chatelier&apos;s principle. Nevertheless, pressures between 4&ndash;10 bar have been adopted since this pressure substantially accelerates the rate of reaction and the throughput, and decreases the volume of reactor used. The decrease of the equilibrium yield is minor compared to the great economical and engineering gains <cite class="apa">(Smith &amp; Valles, 2019)</cite>.
+        </p>
+      </div>
+    </div>
+
+    <h3>Sources of Reactants</h3>
+    <p>
+      The feedstock of the Ostwald Process is <strong>ammonia (NH&#8323;)</strong> which is not actually produced in the process itself. It is fed by the <em>Haber-Bosch Process</em>, which combines dinitrogen (N&#8322;) in the atmosphere with hydrogen gas (H&#8322;) at high temperature and pressure on an iron catalyst to produce ammonia. The hydrogen is normally acquired through the steam reforming of natural gas (methane). In large-scale industrial plants, the Haber-Bosch and Ostwald plants are located on the same territory, and the ammonia is transferred to the other process through piping <cite class="apa">(Johnson, 2021)</cite>.
+    </p>
+    <p>
+      There is no necessity to produce or acquire <strong>oxygen (O&#8322;)</strong> separately &mdash; it is simply extracted from atmospheric air, which contains around 21% oxygen by volume. The air is compressed and mixed with ammonia vapour in a ratio of about 1&nbsp;:&nbsp;8.5 (NH&#8323;&nbsp;:&nbsp;air) by volume before being introduced into the catalyst gauze. The correct ratio is important: excessive concentrations of ammonia will lead to the creation of explosive mixtures, and insufficient concentrations will decrease the conversion rate <cite class="apa">(Brown, 2020)</cite>.
+    </p>
+
+    <h3>Isolation and Separation of the Final Product</h3>
+    <p>
+      The resulting aqueous nitric acid obtained in Stage 3 is normally 55&ndash;68% by mass, which is used in most industrial applications such as making fertilisers. In case larger concentration is necessary &mdash; for example, 90% or more, as in rocket propellants and some specialty chemicals &mdash; additional concentration steps are used. Fractional distillation with a dehydrating agent such as concentrated sulphuric acid (H&#8322;SO&#8324;) to remove the water and distil off the nitric acid at a higher concentration is the most common method <cite class="apa">(Smith &amp; Valles, 2019)</cite>. The Stage 3 NO by-product is recycled directly into the oxidation tank of Stage 2, minimising the amount of nitrogen compounds wasted during the process.
+    </p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- PROCESS FLOW -->
+  <section id="flow">
+    <h2>Process Flow</h2>
+    <div class="section-line"></div>
+
+    <p>
+      The reduced scheme below demonstrates the chronological flow of materials of the three steps of the Ostwald Process, starting with the initials of ammonia and air as inputs to nitric acid as the final product <cite class="apa">(Johnson, 2021; Brown, 2020)</cite>.
+    </p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <strong>Input</strong>
+        NH&#8323; gas<br>+ compressed air
+      </div>
+      <div class="flow-arr">&rarr;</div>
+      <div class="flow-step">
+        <strong>Stage 1</strong>
+        Pt-Rh gauze<br>800&ndash;900&deg;C, 4&ndash;10 bar<br><em>NH&#8323; &rarr; NO</em>
+      </div>
+      <div class="flow-arr">&rarr;</div>
+      <div class="flow-step">
+        <strong>Stage 2</strong>
+        Cooled to ~50&deg;C<br>no catalyst<br><em>NO &rarr; NO&#8322;</em>
+      </div>
+      <div class="flow-arr">&rarr;</div>
+      <div class="flow-step">
+        <strong>Stage 3</strong>
+        Absorption tower<br>counter-current H&#8322;O<br><em>NO&#8322; &rarr; HNO&#8323;</em>
+      </div>
+      <div class="flow-arr">&rarr;</div>
+      <div class="flow-step end">
+        <strong>Product</strong>
+        HNO&#8323; (aq)<br>55&ndash;68%<br>concentration
+      </div>
+    </div>
+    <p class="fig-caption">Figure 1. Basic process flow chart of the Ostwald Process. The by-product of NO in Stage 3 is reused in Stage 2 (recycling loop is not depicted).</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- IMPLICATIONS -->
+  <section id="implications">
+    <h2>Implications</h2>
+    <div class="section-line"></div>
+
+    <p>
+      The implications of the Ostwald Process are far reaching and go beyond the laboratory. Two major aspects are considered, namely, <strong>economic</strong> and <strong>environmental</strong>. In the case of the economic factor, there are two advantages and one disadvantage. In the case of the environmental factor, there are two disadvantages and one advantage.
+    </p>
+
+    <div class="impl-grid">
+
+      <div class="impl-card">
+        <div class="impl-head eco">Economic Factor</div>
+
+        <div class="impl-item">
+          <span class="badge adv">ADV 1</span>
+          <p>
+            <strong>Promotion of a huge international market.</strong> Valuing the entire value of all the downstream products (fertilisers, nylon, explosives, dyes, and pharmaceuticals) the nitric acid industry is estimated to be about $100 billion USD per year <cite class="apa">(Smith &amp; Valles, 2019)</cite>. Those countries which run large-scale plants operating under the Ostwald Process, such as China, Germany, Russia and the United States, will have a great economic benefit in the agricultural and chemical markets across the world. The process operates continuously at a high on-stream availability (&gt;95%), meaning that downstream industries can always be assured of a consistent supply of nitric acid. This stability in supply will decrease the price volatility which will be beneficial to both manufacturers and consumers.
+          </p>
+        </div>
+
+        <div class="impl-item">
+          <span class="badge adv">ADV 2</span>
+          <p>
+            <strong>Employment and economic growth.</strong> One full sized nitric acid facility has hundreds of qualified chemical engineers, processing operators, lab personnel and maintenance staff directly employed. The industry that partially relies on nitric acid through the fertiliser industry indirectly provides hundreds of millions of working and farming people around the world. The availability of affordable synthetic nitrogen fertilisers has traditionally been closely linked with the increase in agricultural productivity, rural incomes, and alleviation of food poverty in developing countries <cite class="apa">(Fertilizer Institute, 2023)</cite>. The Ostwald Process is therefore not merely an economic resource of rich industrialised countries &mdash; the products of its downstream businesses assist in supporting livelihoods in some of the poorest agricultural communities in the world.
+          </p>
+        </div>
+
+        <div class="impl-item">
+          <span class="badge dis">DIS 1</span>
+          <p>
+            <strong>Capital investments are very high.</strong> The construction and management of a nitric acid plant of a global scale is a highly capital-intensive project. The high-pressure corrosion-resistant reactor vessels, heat exchangers, absorption towers, as well as costly platinum-rhodium catalyst gauzes required by construction can be replaced regularly as platinum is continuously lost in the form of vapour at operating temperatures, leading to a cost easily exceeding $500 million USD <cite class="apa">(Smith &amp; Valles, 2019)</cite>. These huge financial hurdles translate to the technology being basically restricted to capital-intensive industrialised countries. Third world countries who are short of such infrastructure have no option but to import nitric acid or processed fertilisers at very high prices, creating an increased economic disparity between the developed and developing countries.
+          </p>
+        </div>
+      </div>
+
+      <div class="impl-card">
+        <div class="impl-head env">Environmental Factor</div>
+
+        <div class="impl-item">
+          <span class="badge adv">ADV 1</span>
+          <p>
+            <strong>Utilisation of a practically inexhaustible source of nitrogen.</strong> The final source of nitrogen is the dinitrogen gas (N&#8322;) in the atmosphere, which is a component of about 78% of the Earth&apos;s atmosphere and is essentially non-depletable &mdash; this is the greatest environmental benefit of the Ostwald Process, when combined with the Haber-Bosch Process that provides it with ammonia <cite class="apa">(Brown, 2020)</cite>. Prior to these processes, mined sodium nitrate (saltpetre) from Chile was used as the main source of fixed nitrogen in fertilisers. In the early 20th century, geologists and economists cautioned that these deposits would run out within the next several decades at the rate at which they were being mined. By making it possible to fix atmospheric nitrogen, the Ostwald Process fully removed this risk of resource scarcity and made agricultural production geologically unlimited.
+          </p>
+        </div>
+
+        <div class="impl-item">
+          <span class="badge dis">DIS 1</span>
+          <p>
+            <strong>Nitrous oxide (N&#8322;O) gas and climate change.</strong> This is the gravest environmental drawback of the Ostwald Process since the formation of nitrous oxide (N&#8322;O) occurs as a by-product in Stage 1 when ammonia is oxidised on the catalyst surface. N&#8322;O is a very strong greenhouse gas, and the Global Warming Potential (GWP) is estimated to be some 298 times higher than that of carbon dioxide (CO&#8322;) over 100 years <cite class="apa">(EPA, 2022)</cite>. It is estimated that the nitric acid manufacturing industry contributes about 5&ndash;8% of the total worldwide human-made N&#8322;O emissions. Although there is technology like selective catalytic reduction (SCR) and tertiary decomposition catalysts that may help drop N&#8322;O emissions of a plant by 70&ndash;90%, it is not yet widely used. A significant portion of the older plants still in operation all over the world have not been retrofitted with such systems, and are still emitting N&#8322;O with serious long-term climatic implications.
+          </p>
+        </div>
+
+        <div class="impl-item">
+          <span class="badge dis">DIS 2</span>
+          <p>
+            <strong>Fertiliser runoff and water eutrophication.</strong> Though the phenomenon of eutrophication is strictly speaking a by-product of the agricultural application of nitric-acid-derived fertilisers and not of the Ostwald Process itself, the direct causal relationship exists in that due to the low-cost production of ammonium nitrate through the process, nitrogen fertilisers are now affordable in very vast amounts. Excessive application of fertiliser or heavy rainfall means that nitrate ions (NO&#8323;&sup1;&macr;) do not get absorbed by the crops, but instead wash through the soil into groundwater and waterways <cite class="apa">(Fertilizer Institute, 2023)</cite>. These excess nutrients trigger explosive algae and cyanobacteria growth once in rivers, lakes, and coastal ocean areas. As this algal biomass dies and decomposes, most of the dissolved oxygen in the water is used up by bacterial activity &mdash; a process referred to as eutrophication. The ensuing hypoxic zones lead to mass mortality of fish and other aquatic organisms. The Gulf of Mexico dead zone, which receives agricultural runoff into the basin of the Mississippi River, is among the most known instances of this phenomenon in the world <cite class="apa">(EPA, 2022)</cite>.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- FUTURE -->
+  <section id="future">
+    <h2>Conclusion and Future</h2>
+    <div class="section-line"></div>
+
+    <p>
+      The Ostwald Process has a history of more than 120 years in which it remains the most prevalent industrial technology in production of nitric acid. Such an outstanding longevity is a sample of the chemical effectiveness, scope, and flexibility of the process to various industrial situations. Although environmental issues are becoming more problematic, and there is an increasing trend of regulatory pressure, the Ostwald Process is not being replaced soon due to the fact that the food system in the world is structurally designed on the fertilisers that it renders possible <cite class="apa">(Johnson, 2021)</cite>. Nonetheless, major shifts in the operational approach to the working process are already occurring, and more radical changes are still ahead.
+    </p>
+
+    <div class="future-grid">
+      <div class="future-card">
+        <h4>New Catalysts Being Tested</h4>
+        <p>
+          Studies are conducted on platinum-free and platinum-reduced catalysts. Other materials being explored as alternatives that are cheaper and at the same time yield less N&#8322;O as a by-product are iron-cobalt spinel oxides and other transition-metal-based materials. The reliance on platinum-group metals would reduce the capital cost of construction of new plants as well <cite class="apa">(Johnson, 2021)</cite>.
+        </p>
+      </div>
+      <div class="future-card">
+        <h4>Reducing N&#8322;O Emissions</h4>
+        <p>
+          Plants constructed today are being equipped with N&#8322;O abatement technology at the very beginning of their construction. Emissions can be reduced by 70&ndash;90% through selective catalytic reduction (SCR) systems and systems of high temperature N&#8322;O decomposition reactors. Existing older plants are also being forced to retrofit these systems by new EU and international regulations <cite class="apa">(EPA, 2022)</cite>.
+        </p>
+      </div>
+      <div class="future-card">
+        <h4>Green Nitric Acid</h4>
+        <p>
+          The principle of green nitric acid is to provide the Ostwald Process with ammonia produced using renewable electricity instead of fossil fuels. When hydrogen is produced through electrolysis of water with the help of solar or wind energy and applied in a green Haber-Bosch process, the final ammonia and the nitric acid derived from it would have an almost zero carbon footprint. A number of European manufacturers have already proclaimed pilot initiatives in this direction by the end of the 2020s <cite class="apa">(Smith &amp; Valles, 2019)</cite>.
+        </p>
+      </div>
+    </div>
+
+    <p>
+      To conclude, the future of the Ostwald Process is likely to be one of unremitting enhancement and not substitution. Catalyst invention will lower the expenses and by-production. The implementation of environmental regulations will be more aggressive and will fasten the implementation of N&#8322;O abatement technologies in current plants. And the nearly carbon free ammonia production by using green hydrogen will ultimately convert the Ostwald Process to a near zero-emission technology. The development of these technologies will not only help the global economy, as farmers all over the world will be able to afford the costs of fertilisers, but will also have a beneficial effect on the environment, as the impact of the greenhouse gas and water pollution related to the given process will be drastically decreased <cite class="apa">(Johnson, 2021; Smith &amp; Valles, 2019)</cite>.
+    </p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- BIBLIOGRAPHY -->
+  <section id="bibliography">
+    <h2>Bibliography</h2>
+    <div class="section-line"></div>
+    <ol class="bib">
+      <li>Johnson, P. (2021). Industrial Inorganic Chemistry: The Ostwald Process. Academic Press.</li>
+      <li>Smith, R., &amp; Valles, J. (2019). Nitric acid production and its global impact. Journal of Chemical Engineering, 12(4), 45&ndash;58.</li>
+      <li>Fertilizer Institute. (2023). The role of nitrogen in global food security. The Fertilizer Institute. https://www.tfi.org</li>
+      <li>Environmental Protection Agency (EPA). (2022). Nitrous oxide emissions from adipic and nitric acid production. U.S. EPA. https://www.epa.gov/ghgemissions</li>
+      <li>Brown, T. L. (2020). Chemistry: The central science (14th ed.). Pearson.</li>
+    </ol>
+  </section>
+
+</main>
+
+<footer>
+  The Ostwald Process &nbsp;&middot;&nbsp; Grade 10 Chemistry &nbsp;&middot;&nbsp; Criterion D
+</footer>
+
+<script>
+  const navLinks = document.querySelectorAll('nav a');
+  const sections = document.querySelectorAll('section[id]');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 130) current = s.id; });
+    navLinks.forEach(a => {
+      const active = a.getAttribute('href') === '#' + current;
+      a.style.color = active ? '#1e3a5f' : '';
+      a.style.borderBottomColor = active ? '#1e3a5f' : 'transparent';
+    });
+  });
+</script>
+
+</body>
+</html>
